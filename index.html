@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SYSTRA — CV Fraud Training Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red:       #d22328;
+  --red-dk:    #a51a1e;
+  --red-lt:    #fdecea;
+  --teal:      #003e4a;
+  --teal2:     #005a6e;
+  --teal-lt:   #2eb2b2;
+  --teal-pale: #e0f4f4;
+  --gold:      #c8a96e;
+  --orange:    #ef8029;
+  --orange-bg: #fff3e0;
+  --green:     #2e7d32;
+  --green-bg:  #e8f5e9;
+  --green-lt:  #73b140;
+  --bg:        #f0f4f6;
+  --surface:   #ffffff;
+  --border:    #dde4e8;
+  --text:      #1a2430;
+  --muted:     #5c6b75;
+  --fh: 'Raleway', sans-serif;
+  --fb: 'Source Sans 3', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--fb); background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ══ LAYOUT ══ */
+.layout { display: flex; min-height: 100vh; }
+
+/* ══ SIDEBAR ══ */
+.sidebar {
+  width: 235px; background: var(--teal); color: rgba(255,255,255,0.85);
+  display: flex; flex-direction: column; flex-shrink: 0;
+  position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
+  transition: transform .28s ease;
+}
+.sb-brand {
+  padding: 20px 18px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.sb-logo { font-family: var(--fh); font-size: 1.55em; font-weight: 900; color: #fff; letter-spacing: 2px; line-height: 1; }
+.sb-logo span { color: var(--red); }
+.sb-sub { font-size: 0.68em; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 3px; }
+
+.sb-module {
+  margin: 14px 14px 0;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 11px 13px;
+}
+.sb-module-icon { font-size: 1.4em; margin-bottom: 4px; }
+.sb-module-name { font-family: var(--fh); font-size: 0.78em; font-weight: 700; color: #fff; line-height: 1.3; }
+.sb-module-tag { font-size: 0.65em; color: rgba(255,255,255,0.45); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.1em; }
+
+.nav-section { padding: 14px 0; flex: 1; overflow-y: auto; }
+.nav-label { font-size: 0.63em; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(255,255,255,0.3); padding: 10px 18px 4px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 18px; color: rgba(255,255,255,0.7);
+  font-size: 0.86em; font-weight: 600; cursor: pointer;
+  border-left: 3px solid transparent; transition: all 0.18s;
+}
+.nav-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
+.nav-item.active { background: rgba(255,255,255,0.12); color: #fff; border-left-color: var(--gold); }
+.nav-item .ico { font-size: 1em; width: 18px; text-align: center; }
+
+.sb-footer {
+  padding: 14px 18px; border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.73em; color: rgba(255,255,255,0.38);
+}
+.live-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(46,125,50,0.25); color: #81c784;
+  padding: 4px 10px; border-radius: 20px; font-size: 0.8em; font-weight: 700; margin-bottom: 7px;
+}
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: #4caf50; animation: blink 1.5s infinite; }
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:.3} }
+
+/* ══ HAMBURGER ══ */
+.hamburger {
+  display: none; position: fixed; top: 12px; left: 12px; z-index: 200;
+  background: var(--teal); border: none; color: white;
+  width: 38px; height: 38px; border-radius: 8px;
+  align-items: center; justify-content: center;
+  font-size: 18px; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+}
+.sidebar-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 90;
+}
+.sidebar-overlay.open { display: block; }
+
+/* ══ MAIN ══ */
+.main { margin-left: 235px; flex: 1; padding: 24px; }
+
+/* ══ TOP BAR ══ */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+}
+.topbar-left {}
+.topbar-title { font-family: var(--fh); font-size: 1.5em; font-weight: 900; color: var(--text); line-height: 1.1; }
+.topbar-sub { font-size: 0.82em; color: var(--muted); margin-top: 2px; }
+.topbar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+/* ══ STRIP ══ */
+.strip { height: 4px; background: linear-gradient(90deg, var(--red), var(--orange) 50%, var(--teal-lt)); border-radius: 2px; margin-bottom: 20px; }
+
+/* ══ BUTTONS ══ */
+.btn {
+  padding: 8px 16px; border-radius: 6px; border: none;
+  font-family: var(--fb); font-size: 0.83em; font-weight: 700;
+  cursor: pointer; transition: all .18s; text-transform: uppercase; letter-spacing: 0.04em;
+}
+.btn-red   { background: var(--red); color: #fff; }
+.btn-red:hover   { background: var(--red-dk); }
+.btn-teal  { background: var(--teal); color: #fff; }
+.btn-teal:hover  { background: #001e24; }
+.btn-ghost { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
+.btn-ghost:hover { border-color: var(--muted); }
+.btn-green { background: var(--green); color: #fff; }
+.btn-green:hover { background: #1b5e20; }
+.btn-sm { padding: 6px 12px; font-size: 0.77em; }
+.btn-del { background: transparent; color: var(--red); border: 1.5px solid var(--red); }
+.btn-del:hover { background: var(--red); color: #fff; }
+
+/* ══ STATS ROW ══ */
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 14px; margin-bottom: 18px; }
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px 18px; position: relative; overflow: hidden;
+}
+.stat-card::after {
+  content: ''; position: absolute; top: 0; left: 0; bottom: 0;
+  width: 4px; border-radius: 8px 0 0 8px;
+}
+.stat-card.c-red::after   { background: var(--red); }
+.stat-card.c-teal::after  { background: var(--teal); }
+.stat-card.c-green::after { background: var(--green); }
+.stat-card.c-gold::after  { background: var(--gold); }
+.stat-card.c-orange::after{ background: var(--orange); }
+.stat-ico { font-size: 1.5em; margin-bottom: 8px; }
+.stat-val { font-family: var(--fh); font-size: 2.1em; font-weight: 900; line-height: 1; }
+.stat-label { font-size: 0.72em; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+
+/* ══ CARDS ══ */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
+.card-title {
+  font-family: var(--fh); font-size: 0.76em; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--muted); font-weight: 700; margin-bottom: 14px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+/* ══ SESSION ROW ══ */
+.session-row {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px 18px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 18px;
+}
+.session-row label { font-size: 0.78em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
+.sel-in {
+  padding: 7px 12px; border: 1.5px solid var(--border); border-radius: 6px;
+  font-family: var(--fb); font-size: 0.85em; color: var(--text);
+  background: var(--bg); min-width: 200px;
+}
+.sel-in:focus { outline: none; border-color: var(--teal); }
+
+/* ══ SCENE PROGRESS BARS ══ */
+.scene-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 18px; }
+.scene-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px 12px; text-align: center; position: relative;
+}
+.scene-card-num { font-family: var(--fh); font-size: 0.68em; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 4px; }
+.scene-card-name { font-family: var(--fh); font-size: 0.7em; font-weight: 700; color: var(--text); line-height: 1.3; margin-bottom: 10px; min-height: 28px; }
+.scene-pct { font-family: var(--fh); font-size: 1.6em; font-weight: 900; color: var(--teal); line-height: 1; }
+.scene-sub { font-size: 0.68em; color: var(--muted); margin-top: 3px; }
+.scene-bar-track { height: 5px; background: #edf1f3; border-radius: 3px; margin-top: 8px; overflow: hidden; }
+.scene-bar-fill { height: 100%; border-radius: 3px; background: var(--teal-lt); transition: width .8s; }
+
+/* ══ TWO-COL ══ */
+.two-col { display: grid; grid-template-columns: 1.8fr 1fr; gap: 16px; margin-bottom: 18px; }
+
+/* ══ TABLE ══ */
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.84em; }
+th {
+  text-align: left; padding: 9px 14px; background: #f6f9fa;
+  color: var(--muted); font-size: 0.72em; text-transform: uppercase;
+  letter-spacing: 0.08em; font-weight: 700; border-bottom: 2px solid var(--border); white-space: nowrap;
+}
+td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text); }
+tr:hover td { background: #fafcfd; }
+tr:last-child td { border-bottom: none; }
+
+/* ══ BADGES ══ */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 20px; font-size: 0.72em; font-weight: 700;
+}
+.b-green  { background: var(--green-bg); color: var(--green); }
+.b-amber  { background: var(--orange-bg); color: var(--orange); }
+.b-grey   { background: #f0f2f4; color: var(--muted); }
+.b-teal   { background: var(--teal-pale); color: var(--teal2); }
+.b-red    { background: var(--red-lt); color: var(--red); }
+.b-gold   { background: #faf3e0; color: #8a6a1f; }
+
+/* ══ MINI PROGRESS ══ */
+.prog-mini { width: 60px; height: 6px; background: #e8edf0; border-radius: 3px; display: inline-block; vertical-align: middle; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 3px; }
+
+/* ══ DIST BARS ══ */
+.dist-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
+.dist-lbl { font-size: 0.75em; color: var(--muted); width: 52px; text-align: right; flex-shrink: 0; }
+.dist-track { flex: 1; height: 10px; background: #edf1f3; border-radius: 5px; overflow: hidden; }
+.dist-fill  { height: 100%; border-radius: 5px; transition: width .8s; }
+.dist-cnt   { font-size: 0.76em; color: var(--muted); width: 24px; flex-shrink: 0; font-weight: 700; }
+
+/* ══ FILTER BAR ══ */
+.filter-bar { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; }
+.filter-in {
+  padding: 7px 12px; border: 1.5px solid var(--border); border-radius: 6px;
+  font-family: var(--fb); font-size: 0.82em; color: var(--text); background: var(--bg);
+}
+.filter-in:focus { outline: none; border-color: var(--teal); }
+.filter-in::placeholder { color: var(--muted); }
+
+/* ══ EMPTY ══ */
+.empty { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 0.88em; }
+.empty .emo { font-size: 2.4em; margin-bottom: 10px; display: block; }
+
+/* ══ QR PANEL ══ */
+.qr-panel {
+  background: linear-gradient(135deg, var(--teal), #005a6e);
+  border-radius: 10px; padding: 22px; color: white; text-align: center;
+}
+.qr-panel h3 { font-family: var(--fh); font-size: 0.85em; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; opacity: .7; margin-bottom: 12px; }
+.qr-box {
+  background: white; border-radius: 8px; padding: 12px;
+  display: inline-block; margin-bottom: 14px;
+}
+.qr-box img { width: 130px; height: 130px; display: block; }
+.qr-url { font-size: 0.72em; opacity: .6; word-break: break-all; margin-bottom: 14px; }
+.qr-link-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+  color: white; padding: 7px 14px; border-radius: 6px;
+  font-size: 0.8em; font-weight: 700; cursor: pointer; text-decoration: none;
+  transition: background .2s;
+}
+.qr-link-btn:hover { background: rgba(255,255,255,0.22); }
+
+/* ══ MODAL ══ */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 300; align-items: center; justify-content: center; padding: 16px; }
+.overlay.open { display: flex; }
+.modal {
+  background: var(--surface); border-radius: 10px; padding: 26px;
+  width: 100%; max-width: 440px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.22); animation: popIn .25s ease;
+}
+.modal-lg { max-width: 720px; }
+@keyframes popIn { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
+.modal-title { font-family: var(--fh); font-size: 1.15em; font-weight: 800; margin-bottom: 4px; }
+.modal-sub   { color: var(--muted); font-size: 0.82em; margin-bottom: 18px; }
+.f-row { margin-bottom: 13px; }
+.f-row label { display: block; font-size: 0.75em; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 4px; }
+.f-row input, .f-row select, .f-row textarea {
+  width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 6px;
+  font-family: var(--fb); font-size: 0.88em; color: var(--text); background: var(--bg);
+}
+.f-row input:focus, .f-row select:focus { outline: none; border-color: var(--teal); }
+.modal-btns { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+.modal-btns .btn { flex: 1; }
+
+/* ══ TOAST ══ */
+#toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--teal); color: #fff; padding: 10px 24px; border-radius: 30px;
+  font-size: 0.86em; font-weight: 700; box-shadow: 0 8px 24px rgba(0,0,0,.2);
+  z-index: 400; transition: transform .3s ease; white-space: nowrap;
+}
+#toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ══ SCORE DONUT ══ */
+.donut-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+.donut-inner { position: absolute; text-align: center; }
+
+/* ══ VIEWS ══ */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ══ RESPONSIVE ══ */
+@media (max-width: 1100px) {
+  .scene-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; padding: 16px; padding-top: 60px; }
+  .hamburger { display: flex; }
+  .two-col { grid-template-columns: 1fr; }
+  .scene-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .scene-grid { grid-template-columns: 1fr 1fr; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .topbar-title { font-size: 1.25em; }
+  .modal { padding: 18px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Hamburger -->
+<button class="hamburger" id="hambBtn" onclick="toggleSidebar()">☰</button>
+<div class="sidebar-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sb-brand">
+      <div class="sb-logo">SYS<span>TRA</span></div>
+      <div class="sb-sub">Internal Control · Analytics</div>
+    </div>
+    <div class="sb-module">
+      <div class="sb-module-icon">🔍</div>
+      <div class="sb-module-name">CV Fraud Detection</div>
+      <div class="sb-module-tag">PMC Training Module</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Views</div>
+      <div class="nav-item active" onclick="showView('dashboard')"><span class="ico">📊</span>Dashboard</div>
+      <div class="nav-item" onclick="showView('participants')"><span class="ico">👥</span>Participants</div>
+      <div class="nav-item" onclick="showView('sessions')"><span class="ico">📅</span>Sessions</div>
+      <div class="nav-label">Actions</div>
+      <div class="nav-item" onclick="openNewSession()"><span class="ico">➕</span>New Session</div>
+      <div class="nav-item" onclick="exportExcel()"><span class="ico">📤</span>Export Excel</div>
+      <div class="nav-item" onclick="window.open('https://satyajits2000.github.io/CV-Fraud-elearning/','_blank')"><span class="ico">🔗</span>Open Module</div>
+    </div>
+    <div class="sb-footer">
+      <div class="live-badge"><span class="live-dot"></span>Live Tracking</div>
+      <div id="last-update">Awaiting data…</div>
+      <div style="margin-top:5px">CV Fraud · 5 Scenes · 50 pts</div>
+    </div>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <!-- ══ DASHBOARD VIEW ══ -->
+    <div id="view-dashboard" class="view active">
+      <div class="strip"></div>
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="topbar-title">CV Fraud — Live Dashboard</div>
+          <div class="topbar-sub">Real-time tracking · CV Fraud Detection Module</div>
+        </div>
+        <div class="topbar-right">
+          <button class="btn btn-ghost btn-sm" onclick="refreshData()">🔄 Refresh</button>
+          <button class="btn btn-red btn-sm" onclick="openNewSession()">+ New Session</button>
+        </div>
+      </div>
+
+      <!-- Session row -->
+      <div class="session-row">
+        <label>Session</label>
+        <select class="sel-in" id="session-selector" onchange="onSessionChange()">
+          <option value="">— Select a session —</option>
+        </select>
+        <span id="session-badge"></span>
+        <span id="session-info" style="font-size:0.78em;color:var(--muted)"></span>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card c-red">
+          <div class="stat-ico">👥</div>
+          <div class="stat-val" id="st-total">0</div>
+          <div class="stat-label">Participants</div>
+        </div>
+        <div class="stat-card c-green">
+          <div class="stat-ico">✅</div>
+          <div class="stat-val" id="st-done">0</div>
+          <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card c-teal">
+          <div class="stat-ico">🎯</div>
+          <div class="stat-val" id="st-avg">—</div>
+          <div class="stat-label">Avg Score</div>
+        </div>
+        <div class="stat-card c-orange">
+          <div class="stat-ico">⏳</div>
+          <div class="stat-val" id="st-prog">0</div>
+          <div class="stat-label">In Progress</div>
+        </div>
+        <div class="stat-card c-gold">
+          <div class="stat-ico">🏆</div>
+          <div class="stat-val" id="st-perfect">0</div>
+          <div class="stat-label">Perfect Score</div>
+        </div>
+      </div>
+
+      <!-- Scene completion -->
+      <div class="card" style="margin-bottom:18px">
+        <div class="card-title">Scene Completion Rate <span style="font-size:0.85em;font-weight:400;text-transform:none;color:var(--muted);letter-spacing:0">% of all participants who reached each scene</span></div>
+        <div class="scene-grid" id="scene-grid">
+          <!-- Rendered by JS -->
+          <div class="scene-card"><div class="scene-card-num">Scene 1</div><div class="scene-card-name">A Stellar CV Arrives</div><div class="scene-pct" id="sp1">—</div><div class="scene-sub">completion</div><div class="scene-bar-track"><div class="scene-bar-fill" id="sb1" style="width:0%"></div></div></div>
+          <div class="scene-card"><div class="scene-card-num">Scene 2</div><div class="scene-card-name">Red Flags Emerge</div><div class="scene-pct" id="sp2">—</div><div class="scene-sub">completion</div><div class="scene-bar-track"><div class="scene-bar-fill" id="sb2" style="width:0%"></div></div></div>
+          <div class="scene-card"><div class="scene-card-num">Scene 3</div><div class="scene-card-name">He's Already Working</div><div class="scene-pct" id="sp3">—</div><div class="scene-sub">completion</div><div class="scene-bar-track"><div class="scene-bar-fill" id="sb3" style="width:0%"></div></div></div>
+          <div class="scene-card"><div class="scene-card-num">Scene 4</div><div class="scene-card-name">Telling the Client</div><div class="scene-pct" id="sp4">—</div><div class="scene-sub">completion</div><div class="scene-bar-track"><div class="scene-bar-fill" id="sb4" style="width:0%"></div></div></div>
+          <div class="scene-card"><div class="scene-card-num">Scene 5</div><div class="scene-card-name">Building Safeguards</div><div class="scene-pct" id="sp5">—</div><div class="scene-sub">completion</div><div class="scene-bar-track"><div class="scene-bar-fill" id="sb5" style="width:0%"></div></div></div>
+        </div>
+      </div>
+
+      <!-- Two-col: Score Dist + QR Code -->
+      <div class="two-col">
+        <!-- Score Distribution -->
+        <div class="card">
+          <div class="card-title">Score Distribution <span style="font-size:.85em;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">out of 50 pts</span></div>
+          <div id="score-dist">
+            <div class="empty"><span class="emo">📊</span>No completed results yet</div>
+          </div>
+        </div>
+
+        <!-- QR Code + link -->
+        <div class="qr-panel">
+          <h3>📱 Training Module</h3>
+          <div class="qr-box">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACECAYAAABRRIOnAAAAAklEQVR4AewaftIAAAWeSURBVO3BQY4kRxLAQDKQ//8yV0c/JZCoau0mYWb/YK01LlhjkQtWWeQCWOS9VRa5YBXWWOSKWS5YZZELVlnkglUWuWCVRS5YZZELVlnkglUWuWCVRS5YZZELVlnkglUWuWCVRS5YZZGL " alt="QR Code" style="width:130px;height:130px;image-rendering:pixelated" onerror="this.parentElement.innerHTML='<div style=\'font-size:3em;line-height:130px\'>📱</div>'">
+          </div>
+          <div class="qr-url">satyajits2000.github.io/CV-Fraud-elearning/</div>
+          <a href="https://satyajits2000.github.io/CV-Fraud-elearning/" target="_blank" class="qr-link-btn">🔗 Open Training Module</a>
+        </div>
+      </div>
+
+      <!-- Recent participants -->
+      <div class="card" style="margin-bottom:18px">
+        <div class="card-title">
+          Recent Participants
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-teal btn-sm" onclick="showView('participants')">View All</button>
+            <button class="btn btn-green btn-sm" onclick="exportExcel()">📤 Export</button>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <table><thead><tr>
+            <th>Name</th><th>Entity</th><th>Score</th><th>Choice Pattern</th><th>Status</th><th>Time</th>
+          </tr></thead>
+          <tbody id="recent-tbody">
+            <tr><td colspan="6"><div class="empty"><span class="emo">📡</span>Select a session to see live data</div></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PARTICIPANTS VIEW ══ -->
+    <div id="view-participants" class="view">
+      <div class="strip"></div>
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="topbar-title">All Participants</div>
+          <div class="topbar-sub">Full participant list with filters</div>
+        </div>
+        <div class="topbar-right">
+          <button class="btn btn-green btn-sm" onclick="exportExcel()">📤 Export Excel</button>
+        </div>
+      </div>
+      <div class="filter-bar">
+        <input class="filter-in" type="text" id="f-name" placeholder="🔍 Search name…" oninput="applyFilters()" style="width:190px">
+        <input class="filter-in" type="text" id="f-entity" placeholder="Filter entity…" oninput="applyFilters()" style="width:160px">
+        <select class="filter-in" id="f-status" onchange="applyFilters()">
+          <option value="">All Statuses</option>
+          <option value="completed">Completed</option>
+          <option value="in_progress">In Progress</option>
+        </select>
+        <span id="f-count" style="font-size:0.8em;color:var(--muted);margin-left:auto"></span>
+      </div>
+      <div class="card">
+        <div class="tbl-wrap">
+          <table><thead><tr>
+            <th>#</th><th>Name</th><th>Entity</th><th>Email</th>
+            <th>Score /50</th><th>Best</th><th>Risky</th><th>Poor</th>
+            <th>Status</th><th>Duration</th><th>Detail</th>
+          </tr></thead>
+          <tbody id="all-tbody">
+            <tr><td colspan="11"><div class="empty"><span class="emo">👥</span>No participants yet</div></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SESSIONS VIEW ══ -->
+    <div id="view-sessions" class="view">
+      <div class="strip"></div>
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="topbar-title">Session Management</div>
+          <div class="topbar-sub">Create and manage training sessions</div>
+        </div>
+        <div class="topbar-right">
+          <button class="btn btn-red btn-sm" onclick="openNewSession()">+ New Session</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">All Sessions</div>
+        <div id="sessions-list">
+          <div class="empty"><span class="emo">📅</span>No sessions yet</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══ NEW SESSION MODAL ═══ -->
+<div class="overlay" id="modal-new">
+  <div class="modal">
+    <div class="modal-title">New Training Session</div>
+    <div class="modal-sub">Create a session to track live CV Fraud module completions.</div>
+    <div class="f-row">
+      <label>Session Name <span style="color:var(--red)">*</span></label>
+      <input type="text" id="m-name" placeholder="e.g. CV Fraud — Paris, June 2025">
+    </div>
+    <div class="f-row"><label>Date</label><input type="date" id="m-date"></div>
+    <div class="f-row"><label>Location / Entity</label><input type="text" id="m-loc" placeholder="e.g. Paris HQ, Mumbai Office"></div>
+    <div class="f-row"><label>Facilitator</label><input type="text" id="m-fac" placeholder="Facilitator name"></div>
+    <div class="f-row"><label>Notes</label><textarea id="m-notes" rows="2" style="resize:vertical" placeholder="Additional notes…"></textarea></div>
+    <div class="modal-btns">
+      <button class="btn btn-ghost" onclick="closeModal('modal-new')">Cancel</button>
+      <button class="btn btn-red" onclick="createSession()">Create &amp; Activate</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PARTICIPANT DETAIL MODAL ═══ -->
+<div class="overlay" id="modal-detail">
+  <div class="modal modal-lg">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px">
+      <div>
+        <div class="modal-title" id="pd-name">Participant Detail</div>
+        <div class="modal-sub" id="pd-meta"></div>
+      </div>
+      <button onclick="closeModal('modal-detail')" style="background:none;border:none;font-size:1.5em;cursor:pointer;color:var(--muted);padding:2px 8px">×</button>
+    </div>
+    <div id="pd-scorebar" style="display:flex;align-items:center;gap:16px;background:var(--bg);border-radius:8px;padding:12px 18px;margin-bottom:16px;flex-wrap:wrap"></div>
+    <div id="pd-scenes" style="margin-bottom:16px"></div>
+    <div class="modal-btns" style="flex-wrap:wrap">
+      <button class="btn btn-ghost" onclick="closeModal('modal-detail')">Close</button>
+      <button class="btn btn-green" onclick="exportExcel()">📊 Export All</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DELETE MODAL ═══ -->
+<div class="overlay" id="modal-delete">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-title" style="color:var(--red)">⚠️ Delete Session</div>
+    <div class="modal-sub">This permanently deletes the session and all participant data. Cannot be undone.</div>
+    <div id="del-name" style="background:var(--red-lt);border:1px solid #f5c2c2;border-radius:6px;padding:12px;margin-bottom:8px;font-weight:700;color:var(--red)"></div>
+    <div class="modal-btns">
+      <button class="btn btn-ghost" onclick="closeModal('modal-delete')">Cancel</button>
+      <button class="btn btn-red" id="del-confirm" onclick="confirmDelete()">Delete Permanently</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast">✅ Done!</div>
+
+<!-- ═══ FIREBASE ═══ -->
+<script type="module">
+import { initializeApp }    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, push, onValue, get, update }
+                             from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDQaDGAOslmVabYfMp7erAVDCzCXhAUj7c",
+  authDomain: "quality-quiz-5d8fa.firebaseapp.com",
+  databaseURL: "https://quality-quiz-5d8fa-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "quality-quiz-5d8fa",
+  storageBucket: "quality-quiz-5d8fa.firebasestorage.app",
+  messagingSenderId: "200263271557",
+  appId: "1:200263271557:web:24908b21ce8d7bb1a795ec"
+};
+
+let db;
+try {
+  const app = initializeApp(firebaseConfig, 'cv-fraud-dashboard');
+  db = getDatabase(app);
+  console.log('Firebase connected');
+} catch(e) { console.warn('Firebase init failed:', e.message); }
+
+window._fb = { db, ref, set, push, onValue, get, update };
+
+window.loadSessions = function() {
+  if (!db) return;
+  onValue(ref(db, 'cv_fraud_sessions'), snap => {
+    window._sessions = snap.exists() ? snap.val() : {};
+    window.renderSessions(window._sessions);
+    window.populateSelector(window._sessions);
+  });
+};
+
+window.listenParticipants = function(sid) {
+  if (!db || !sid) return;
+  onValue(ref(db, `cv_fraud_sessions/${sid}/participants`), snap => {
+    window._parts = snap.exists() ? snap.val() : {};
+    window.renderAll(window._parts);
+    document.getElementById('last-update').textContent = '🟢 ' + new Date().toLocaleTimeString();
+  });
+};
+
+window.firebaseCreate = async function(data) {
+  if (!db) {
+    const k = 'local_' + Date.now();
+    window._sessions = window._sessions || {};
+    Object.keys(window._sessions).forEach(k => window._sessions[k].status = 'inactive');
+    window._sessions[k] = data;
+    window.renderSessions(window._sessions);
+    window.populateSelector(window._sessions);
+    return k;
+  }
+  try {
+    const snap = await get(ref(db, 'cv_fraud_sessions'));
+    if (snap.exists()) {
+      const upd = {};
+      Object.keys(snap.val()).forEach(k => upd[`cv_fraud_sessions/${k}/status`] = 'inactive');
+      await update(ref(db), upd);
+    }
+    const nr = push(ref(db, 'cv_fraud_sessions'));
+    await set(nr, data);
+    return nr.key;
+  } catch(e) { console.error(e); return null; }
+};
+
+window.firebaseDelete = async function(id) {
+  if (!db) return;
+  const upd = {}; upd[`cv_fraud_sessions/${id}`] = null;
+  await update(ref(db), upd);
+};
+
+window.firebaseActivate = async function(id) {
+  if (!db) return;
+  const upd = {};
+  Object.keys(window._sessions||{}).forEach(k => upd[`cv_fraud_sessions/${k}/status`] = 'inactive');
+  upd[`cv_fraud_sessions/${id}/status`] = 'active';
+  await update(ref(db), upd);
+};
+
+window.loadSessions();
+</script>
+
+<!-- ═══ DASHBOARD LOGIC ═══ -->
+<script>
+let allP = [];
+let curSid = null;
+let delId  = null;
+
+// ── SIDEBAR ──
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sbOverlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sbOverlay').classList.remove('open');
+}
+
+// ── VIEWS ──
+function showView(v) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.classList.toggle('active', (el.getAttribute('onclick')||'').includes(`'${v}'`));
+  });
+  if (window.innerWidth <= 900) closeSidebar();
+}
+
+// ── SESSION RENDER ──
+window.renderSessions = function(sessions) {
+  const list = document.getElementById('sessions-list');
+  if (!sessions || !Object.keys(sessions).length) {
+    list.innerHTML = '<div class="empty"><span class="emo">📅</span>No sessions yet. Create your first!</div>';
+    return;
+  }
+  list.innerHTML = '';
+  Object.entries(sessions).reverse().forEach(([id, s]) => {
+    const cnt = s.participants ? Object.keys(s.participants).length : 0;
+    const active = s.status === 'active';
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--border);gap:12px;flex-wrap:wrap';
+    row.innerHTML = `
+      <div style="flex:1;min-width:200px">
+        <div style="font-weight:700;font-size:0.93em">${s.name||'Unnamed'}</div>
+        <div style="color:var(--muted);font-size:0.76em;margin-top:2px">${s.date||''} · ${s.location||''} · ${s.facilitator||''}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span class="badge ${active?'b-green':'b-grey'}">${active?'🟢 Active':'Inactive'}</span>
+        <span style="color:var(--muted);font-size:0.8em">👥 ${cnt}</span>
+        ${!active?`<button class="btn btn-green btn-sm" onclick="activateSession('${id}')">Activate</button>`:''}
+        <button class="btn btn-ghost btn-sm" onclick="loadSession('${id}')">View</button>
+        <button class="btn btn-del btn-sm" onclick="askDelete('${id}','${(s.name||'Unnamed').replace(/'/g,"\\'")}')">🗑</button>
+      </div>`;
+    list.appendChild(row);
+  });
+};
+
+window.populateSelector = function(sessions) {
+  const sel = document.getElementById('session-selector');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— Select a session —</option>';
+  if (!sessions) return;
+  Object.entries(sessions).reverse().forEach(([id, s]) => {
+    const o = document.createElement('option');
+    o.value = id;
+    o.textContent = (s.status==='active'?'🟢 ':'') + (s.name||'Unnamed') + (s.date?` (${s.date})`:'');
+    if (s.status === 'active') o.selected = true;
+    sel.appendChild(o);
+  });
+  if (cur) sel.value = cur;
+  if (!cur && sel.value) onSessionChange();
+};
+
+function onSessionChange() {
+  curSid = document.getElementById('session-selector').value;
+  if (curSid && window.listenParticipants) window.listenParticipants(curSid);
+  const s = window._sessions?.[curSid];
+  const badge = document.getElementById('session-badge');
+  if (s) {
+    badge.innerHTML = `<span class="badge ${s.status==='active'?'b-green':'b-grey'}">${s.status==='active'?'🟢 Active':'Inactive'}</span>`;
+    document.getElementById('session-info').textContent = s.location ? `· ${s.location}` : '';
+  }
+}
+
+function loadSession(id) {
+  document.getElementById('session-selector').value = id;
+  onSessionChange(); showView('dashboard');
+}
+
+async function activateSession(id) {
+  try {
+    await window.firebaseActivate(id);
+    showToast('✅ Session activated!');
+  } catch(e) { showToast('❌ Failed'); }
+}
+
+// ── DATA RENDER ──
+window.renderAll = function(data) {
+  allP = Object.values(data || {});
+  updateStats();
+  renderRecent(allP.slice(-10).reverse());
+  renderAllTable(allP);
+  renderDist(allP);
+  renderSceneBars(allP);
+};
+
+function scoreColor(pct) { return pct>=80?'#2e7d32':pct>=60?'#e65100':'var(--red)'; }
+function getScore(p) { return p.finalScore ?? p.score ?? 0; }
+function getPct(p)   { return Math.round((getScore(p)/50)*100); }
+function getDur(p)   { if(!p.startTime||!p.endTime)return '—'; const s=Math.round((new Date(p.endTime)-new Date(p.startTime))/1000); return s>60?`${Math.floor(s/60)}m ${s%60}s`:`${s}s`; }
+
+function updateStats() {
+  const done = allP.filter(p=>p.status==='completed');
+  const inp  = allP.filter(p=>p.status==='in_progress');
+  const pcts = done.map(p=>getPct(p));
+  const avg  = pcts.length ? Math.round(pcts.reduce((a,b)=>a+b,0)/pcts.length) : null;
+  const perfect = done.filter(p=>getScore(p)>=50).length;
+  document.getElementById('st-total').textContent   = allP.length;
+  document.getElementById('st-done').textContent    = done.length;
+  document.getElementById('st-avg').textContent     = avg!==null ? avg+'%' : '—';
+  document.getElementById('st-prog').textContent    = inp.length;
+  document.getElementById('st-perfect').textContent = perfect;
+}
+
+function renderSceneBars(parts) {
+  const total = parts.length || 1;
+  for (let i=1; i<=5; i++) {
+    const cnt = parts.filter(p => (p.scenesCompleted||0) >= i || p.status==='completed').length;
+    const pct = Math.round((cnt/total)*100);
+    const el = document.getElementById('sp'+i);
+    const bar = document.getElementById('sb'+i);
+    if (el)  el.textContent = parts.length ? pct+'%' : '—';
+    if (bar) bar.style.width = parts.length ? pct+'%' : '0%';
+  }
+}
+
+function renderRecent(parts) {
+  const tb = document.getElementById('recent-tbody');
+  if (!parts.length) { tb.innerHTML='<tr><td colspan="6"><div class="empty"><span class="emo">📡</span>No participants yet</div></td></tr>'; return; }
+  tb.innerHTML = parts.map(p => {
+    const score = getScore(p), pct = getPct(p);
+    const nC = p.nCorrect ?? 0, nR = p.nRisky ?? 0, nP = p.nPoor ?? 0;
+    return `<tr>
+      <td><b>${p.name||'—'}</b></td>
+      <td style="color:var(--muted)">${p.entity||'—'}</td>
+      <td><span style="font-weight:800;color:${scoreColor(pct)}">${score}/50</span>
+        <div class="prog-mini"><div class="prog-fill" style="width:${pct}%;background:${scoreColor(pct)}"></div></div></td>
+      <td style="font-size:0.8em">
+        <span style="color:var(--green)">✅${nC}</span>
+        <span style="color:var(--orange);margin:0 4px">⚠${nR}</span>
+        <span style="color:var(--red)">❌${nP}</span>
+      </td>
+      <td><span class="badge ${p.status==='completed'?'b-green':p.status==='in_progress'?'b-amber':'b-grey'}">${p.status==='completed'?'✅ Done':p.status==='in_progress'?'⏳ Active':'—'}</span></td>
+      <td style="color:var(--muted);font-size:0.78em">${p.startTime?new Date(p.startTime).toLocaleTimeString():''}</td>
+    </tr>`;
+  }).join('');
+}
+
+function applyFilters() {
+  let p = allP;
+  const nf  = (document.getElementById('f-name')?.value||'').toLowerCase();
+  const ef  = (document.getElementById('f-entity')?.value||'').toLowerCase();
+  const sf  = (document.getElementById('f-status')?.value||'');
+  if (nf) p = p.filter(x=>(x.name||'').toLowerCase().includes(nf));
+  if (ef) p = p.filter(x=>(x.entity||'').toLowerCase().includes(ef));
+  if (sf) p = p.filter(x=>x.status===sf);
+  renderAllTable(p);
+  const fc = document.getElementById('f-count');
+  if (fc) fc.textContent = `${p.length} result${p.length!==1?'s':''}`;
+}
+
+function renderAllTable(parts) {
+  const tb = document.getElementById('all-tbody');
+  if (!parts.length) { tb.innerHTML='<tr><td colspan="11"><div class="empty"><span class="emo">👥</span>No participants</div></td></tr>'; return; }
+  tb.innerHTML = parts.map((p,i)=>{
+    const score=getScore(p), pct=getPct(p), dur=getDur(p);
+    const nC=p.nCorrect??0, nR=p.nRisky??0, nPr=p.nPoor??0;
+    return `<tr>
+      <td style="color:var(--muted)">${i+1}</td>
+      <td><b>${p.name||'—'}</b></td>
+      <td>${p.entity||'—'}</td>
+      <td style="color:var(--muted);font-size:0.8em">${p.email||'—'}</td>
+      <td><span style="font-weight:800;color:${scoreColor(pct)}">${score}/50 (${pct}%)</span></td>
+      <td><span style="color:var(--green);font-weight:700">✅ ${nC}</span></td>
+      <td><span style="color:var(--orange);font-weight:700">⚠ ${nR}</span></td>
+      <td><span style="color:var(--red);font-weight:700">❌ ${nPr}</span></td>
+      <td><span class="badge ${p.status==='completed'?'b-green':p.status==='in_progress'?'b-amber':'b-grey'}">${p.status==='completed'?'✅ Done':p.status==='in_progress'?'⏳ Active':'—'}</span></td>
+      <td style="color:var(--muted)">${dur}</td>
+      <td><button class="btn btn-teal btn-sm" onclick="openDetail(${i})">📋</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderDist(parts) {
+  const done = parts.filter(p=>p.status==='completed');
+  const el = document.getElementById('score-dist');
+  if (!done.length) { el.innerHTML='<div class="empty"><span class="emo">📊</span>No completed quizzes yet</div>'; return; }
+  const buckets = [
+    {lbl:'0–19',min:0,max:20,color:'var(--red)',count:0},
+    {lbl:'20–29',min:20,max:30,color:'var(--orange)',count:0},
+    {lbl:'30–39',min:30,max:40,color:'#f8b61d',count:0},
+    {lbl:'40–49',min:40,max:50,color:var('--green-lt'),color:'#73b140',count:0},
+    {lbl:'50 🏆',min:50,max:51,color:'var(--green)',count:0},
+  ];
+  done.forEach(p=>{
+    const sc=getScore(p);
+    const b=buckets.find(b=>sc>=b.min&&sc<b.max); if(b)b.count++;
+  });
+  const maxC=Math.max(...buckets.map(b=>b.count),1);
+  const scores=done.map(p=>getScore(p));
+  const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+  const pass=done.filter(p=>getPct(p)>=80).length;
+
+  const bars=buckets.map(b=>`
+    <div class="dist-bar">
+      <span class="dist-lbl">${b.lbl}</span>
+      <div class="dist-track"><div class="dist-fill" style="width:${(b.count/maxC)*100}%;background:${b.color}"></div></div>
+      <span class="dist-cnt">${b.count}</span>
+    </div>`).join('');
+
+  el.innerHTML=`<div style="display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center">
+    <div>${bars}</div>
+    <div style="text-align:center;display:flex;flex-direction:column;gap:10px;min-width:90px">
+      <div>
+        <div style="font-family:var(--fh);font-size:2em;font-weight:900;color:var(--teal)">${avg}</div>
+        <div style="font-size:0.7em;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Avg /50</div>
+      </div>
+      <div style="background:var(--green-bg);border-radius:6px;padding:8px">
+        <div style="font-family:var(--fh);font-size:1.4em;font-weight:800;color:var(--green)">${pass}</div>
+        <div style="font-size:0.68em;color:var(--green)">≥80% pass</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function openDetail(idx) {
+  const p = allP[idx]; if(!p)return;
+  const score=getScore(p), pct=getPct(p), dur=getDur(p);
+  const color=scoreColor(pct);
+  document.getElementById('pd-name').textContent = p.name||'—';
+  document.getElementById('pd-meta').textContent = `${p.entity||''} · ${p.email||''} · ⏱ ${dur}`;
+  document.getElementById('pd-scorebar').innerHTML=`
+    <div style="width:72px;height:72px;border-radius:50%;background:conic-gradient(${color} ${pct*3.6}deg,#e8edf0 0deg);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      <div style="width:54px;height:54px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center">
+        <span style="font-family:var(--fh);font-size:1.1em;font-weight:900;color:${color}">${score}</span>
+        <span style="font-size:0.62em;color:var(--muted)">/ 50</span>
+      </div>
+    </div>
+    <div style="flex:1">
+      <div style="font-family:var(--fh);font-size:1.1em;font-weight:800;color:${color};margin-bottom:6px">${pct}% — ${score}/50 points</div>
+      <div style="height:8px;background:#e8edf0;border-radius:4px;overflow:hidden;margin-bottom:8px">
+        <div style="height:100%;width:${pct}%;background:${color};border-radius:4px;transition:width .8s"></div>
+      </div>
+      <div style="display:flex;gap:16px;font-size:0.82em;flex-wrap:wrap">
+        <span style="color:var(--green);font-weight:700">✅ ${p.nCorrect||0} Best (10pts each)</span>
+        <span style="color:var(--orange);font-weight:700">⚠ ${p.nRisky||0} Risky (4pts each)</span>
+        <span style="color:var(--red);font-weight:700">❌ ${p.nPoor||0} Poor (0pts each)</span>
+      </div>
+    </div>
+    <span class="badge ${p.status==='completed'?'b-green':'b-amber'}">${p.status==='completed'?'Completed':'In Progress'}</span>`;
+
+  const sceneNames=['A Stellar CV Arrives','Red Flags Emerge','He\'s Already Working','Telling the Client','Building Safeguards'];
+  const scenes=p.sceneResults||[];
+  document.getElementById('pd-scenes').innerHTML=`
+    <div style="font-family:var(--fh);font-size:0.72em;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700;margin-bottom:10px">Scene-by-Scene Results</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px">
+      ${sceneNames.map((name,i)=>{
+        const sc=scenes[i];
+        const pts=sc?sc.points:null;
+        const type=sc?sc.type:'';
+        const badge=type==='correct'?'b-green':type==='risky'?'b-amber':'b-red';
+        const ico=type==='correct'?'✅':type==='risky'?'⚠️':type==='poor'?'❌':'—';
+        return `<div style="border:1.5px solid var(--border);border-radius:8px;padding:10px;text-align:center;background:var(--bg)">
+          <div style="font-size:0.68em;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Scene ${i+1}</div>
+          <div style="font-size:0.76em;font-weight:700;color:var(--text);margin:3px 0;line-height:1.3">${name}</div>
+          ${sc?`<span class="badge ${badge}" style="margin:4px 0">${ico} ${pts}/10</span>`:'<span style="color:var(--muted);font-size:0.75em">Not reached</span>'}
+        </div>`;
+      }).join('')}
+    </div>`;
+  document.getElementById('modal-detail').classList.add('open');
+}
+
+// ── SESSION ACTIONS ──
+function openNewSession() {
+  document.getElementById('m-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('modal-new').classList.add('open');
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+async function createSession() {
+  const name = document.getElementById('m-name').value.trim();
+  if (!name) { showToast('⚠ Session name required'); return; }
+  const data = {
+    name, date: document.getElementById('m-date').value,
+    location: document.getElementById('m-loc').value.trim(),
+    facilitator: document.getElementById('m-fac').value.trim(),
+    notes: document.getElementById('m-notes').value.trim(),
+    status: 'active', createdAt: new Date().toISOString(), module: 'cv_fraud'
+  };
+  try {
+    await window.firebaseCreate(data);
+    closeModal('modal-new');
+    showToast('✅ Session created & activated!');
+    ['m-name','m-loc','m-fac','m-notes'].forEach(id=>document.getElementById(id).value='');
+  } catch(e) { showToast('❌ Create failed'); console.error(e); }
+}
+
+function askDelete(id, name) {
+  delId = id;
+  document.getElementById('del-name').textContent = `"${name}"`;
+  document.getElementById('modal-delete').classList.add('open');
+}
+async function confirmDelete() {
+  if (!delId) return;
+  const btn = document.getElementById('del-confirm');
+  btn.textContent = 'Deleting…'; btn.disabled = true;
+  try {
+    await window.firebaseDelete(delId);
+    if (curSid === delId) { curSid = null; allP = []; window.renderAll({}); }
+    closeModal('modal-delete');
+    showToast('🗑️ Session deleted');
+  } catch(e) { showToast('❌ Delete failed'); }
+  btn.textContent = 'Delete Permanently'; btn.disabled = false; delId = null;
+}
+
+function refreshData() {
+  if (curSid && window.listenParticipants) window.listenParticipants(curSid);
+  showToast('🔄 Refreshed');
+}
+
+// ── EXPORT ──
+function exportExcel() {
+  if (!allP.length) { showToast('No data to export'); return; }
+  // Build CSV fallback (no SheetJS dependency needed)
+  const rows = [['Name','Entity','Email','Score/50','Pct%','Best Choices','Risky Choices','Poor Choices','Status','Duration','Start Time']];
+  allP.forEach(p=>{
+    rows.push([
+      p.name||'', p.entity||'', p.email||'',
+      getScore(p), getPct(p)+'%',
+      p.nCorrect||0, p.nRisky||0, p.nPoor||0,
+      p.status||'', getDur(p),
+      p.startTime ? new Date(p.startTime).toLocaleString() : ''
+    ]);
+  });
+  const csv = rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `SYSTRA_CVFraud_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  showToast('📤 Exported!');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+
+// ── MODAL CLOSE ON BACKDROP ──
+document.querySelectorAll('.overlay').forEach(el=>{
+  el.addEventListener('click', e=>{ if(e.target===el) el.classList.remove('open'); });
+});
+
+// Fallback empty state
+setTimeout(()=>{
+  if (!window._sessions) {
+    window._sessions = {};
+    window.renderSessions({});
+    window.populateSelector({});
+  }
+}, 3500);
+</script>
+</body>
+</html>
