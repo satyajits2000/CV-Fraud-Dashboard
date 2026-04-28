@@ -859,7 +859,7 @@ function renderDist(parts) {
     {lbl:'0–19',min:0,max:20,color:'var(--red)',count:0},
     {lbl:'20–29',min:20,max:30,color:'var(--orange)',count:0},
     {lbl:'30–39',min:30,max:40,color:'#f8b61d',count:0},
-    {lbl:'40–49',min:40,max:50,color:var('--green-lt'),color:'#73b140',count:0},
+    {lbl:'40–49',min:40,max:50,color:'#73b140',count:0},
     {lbl:'50 🏆',min:50,max:51,color:'var(--green)',count:0},
   ];
   done.forEach(p=>{
@@ -957,12 +957,13 @@ async function createSession() {
     notes: document.getElementById('m-notes').value.trim(),
     status: 'active', createdAt: new Date().toISOString(), module: 'cv_fraud'
   };
+  if (typeof window.firebaseCreate !== 'function') { showToast('⚠ Firebase not ready, please wait…'); return; }
   try {
     await window.firebaseCreate(data);
     closeModal('modal-new');
     showToast('✅ Session created & activated!');
     ['m-name','m-loc','m-fac','m-notes'].forEach(id=>document.getElementById(id).value='');
-  } catch(e) { showToast('❌ Create failed'); console.error(e); }
+  } catch(e) { showToast('❌ Create failed: ' + e.message); console.error(e); }
 }
 
 function askDelete(id, name) {
