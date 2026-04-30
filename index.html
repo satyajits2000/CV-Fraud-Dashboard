@@ -383,7 +383,12 @@ tr:last-child td { border-bottom: none; }
   <!-- ── SIDEBAR ── -->
   <nav class="sidebar" id="sidebar">
     <div class="sb-brand">
-      <div class="sb-logo">SYS<span>TRA</span></div>
+      <div class="sb-logo">
+        <img src="https://satyajits2000.github.io/CV-Fraud-elearning/Logo_SYSTRA.png"
+             alt="SYSTRA" style="height:32px;width:auto;display:block;filter:brightness(0) invert(1)"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <span style="display:none">SYS<span style="color:var(--red)">TRA</span></span>
+      </div>
       <div class="sb-sub">Internal Control · Analytics</div>
     </div>
     <div class="sb-module">
@@ -748,13 +753,12 @@ tr:last-child td { border-bottom: none; }
 
 <div id="toast">✅ Done!</div>
 
-<!-- ═══ FIREBASE ═══ -->
-<script type="module">
-import { initializeApp }    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, push, onValue, get, update }
-                             from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
-const firebaseConfig = {
+<!-- ═══ FIREBASE COMPAT SDK (avoids ES module async timing issues) ═══ -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+// ── Firebase init ──
+const _fbConfig = {
   apiKey: "AIzaSyDQaDGAOslmVabYfMp7erAVDCzCXhAUj7c",
   authDomain: "quality-quiz-5d8fa.firebaseapp.com",
   databaseURL: "https://quality-quiz-5d8fa-default-rtdb.europe-west1.firebasedatabase.app",
@@ -764,71 +768,98 @@ const firebaseConfig = {
   appId: "1:200263271557:web:24908b21ce8d7bb1a795ec"
 };
 
-let db;
+let _db = null;
+let _partListener = null;
+
 try {
-  const app = initializeApp(firebaseConfig, 'cv-fraud-dashboard');
-  db = getDatabase(app);
-  console.log('Firebase connected');
-} catch(e) { console.warn('Firebase init failed:', e.message); }
+  const _app = firebase.apps.length
+    ? firebase.app('cv-fraud-db')
+    : firebase.initializeApp(_fbConfig, 'cv-fraud-db');
+  _db = firebase.database(_app);
+  console.log('✅ Firebase connected');
+} catch(e) {
+  console.warn('Firebase init error:', e.message);
+}
 
-window._fb = { db, ref, set, push, onValue, get, update };
-
-window.loadSessions = function() {
-  if (!db) return;
-  onValue(ref(db, 'cv_fraud_sessions'), snap => {
+// ── Load & watch sessions ──
+function _startSessionListener() {
+  if (!_db) { setTimeout(_startSessionListener, 400); return; }
+  _db.ref('cv_fraud_sessions').on('value', snap => {
     window._sessions = snap.exists() ? snap.val() : {};
-    window.renderSessions(window._sessions);
-    window.populateSelector(window._sessions);
+    // Wait for DOM functions to be ready
+    if (window.renderSessions) window.renderSessions(window._sessions);
+    if (window.populateSelector) window.populateSelector(window._sessions);
   });
-};
+}
 
+// ── Listen to participants for a session ──
 window.listenParticipants = function(sid) {
-  if (!db || !sid) return;
-  onValue(ref(db, `cv_fraud_sessions/${sid}/participants`), snap => {
+  if (!_db || !sid) return;
+  // Detach previous listener
+  if (_partListener) { _db.ref(_partListener).off(); _partListener = null; }
+  const path = `cv_fraud_sessions/${sid}/participants`;
+  _partListener = path;
+  _db.ref(path).on('value', snap => {
     window._parts = snap.exists() ? snap.val() : {};
-    window.renderAll(window._parts);
-    document.getElementById('last-update').textContent = '🟢 ' + new Date().toLocaleTimeString();
+    if (window.renderAll) window.renderAll(window._parts);
+    const el = document.getElementById('last-update');
+    if (el) el.textContent = '🟢 ' + new Date().toLocaleTimeString();
   });
 };
 
+// ── Create session (deactivate all others first) ──
 window.firebaseCreate = async function(data) {
-  if (!db) {
+  if (!_db) {
+    // Offline fallback
     const k = 'local_' + Date.now();
     window._sessions = window._sessions || {};
-    Object.keys(window._sessions).forEach(k => window._sessions[k].status = 'inactive');
+    Object.keys(window._sessions).forEach(j => { window._sessions[j].status = 'inactive'; });
     window._sessions[k] = data;
     window.renderSessions(window._sessions);
     window.populateSelector(window._sessions);
     return k;
   }
   try {
-    const snap = await get(ref(db, 'cv_fraud_sessions'));
+    // Deactivate all existing sessions
+    const snap = await _db.ref('cv_fraud_sessions').once('value');
     if (snap.exists()) {
       const upd = {};
-      Object.keys(snap.val()).forEach(k => upd[`cv_fraud_sessions/${k}/status`] = 'inactive');
-      await update(ref(db), upd);
+      Object.keys(snap.val()).forEach(k => { upd[`cv_fraud_sessions/${k}/status`] = 'inactive'; });
+      await _db.ref().update(upd);
     }
-    const nr = push(ref(db, 'cv_fraud_sessions'));
-    await set(nr, data);
-    return nr.key;
-  } catch(e) { console.error(e); return null; }
+    // Push new session
+    const newRef = _db.ref('cv_fraud_sessions').push();
+    await newRef.set(data);
+    return newRef.key;
+  } catch(e) { console.error('firebaseCreate error:', e); throw e; }
 };
 
+// ── Delete session ──
 window.firebaseDelete = async function(id) {
-  if (!db) return;
-  const upd = {}; upd[`cv_fraud_sessions/${id}`] = null;
-  await update(ref(db), upd);
+  if (!_db) return;
+  try {
+    await _db.ref(`cv_fraud_sessions/${id}`).remove();
+  } catch(e) { console.error('firebaseDelete error:', e); throw e; }
 };
 
+// ── Activate session ──
 window.firebaseActivate = async function(id) {
-  if (!db) return;
-  const upd = {};
-  Object.keys(window._sessions||{}).forEach(k => upd[`cv_fraud_sessions/${k}/status`] = 'inactive');
-  upd[`cv_fraud_sessions/${id}/status`] = 'active';
-  await update(ref(db), upd);
+  if (!_db) return;
+  try {
+    const snap = await _db.ref('cv_fraud_sessions').once('value');
+    const upd = {};
+    if (snap.exists()) {
+      Object.keys(snap.val()).forEach(k => { upd[`cv_fraud_sessions/${k}/status`] = 'inactive'; });
+    }
+    upd[`cv_fraud_sessions/${id}/status`] = 'active';
+    await _db.ref().update(upd);
+  } catch(e) { console.error('firebaseActivate error:', e); throw e; }
 };
 
-window.loadSessions();
+// ── Start listening once DOM+JS is ready ──
+document.addEventListener('DOMContentLoaded', _startSessionListener);
+// Also try immediately in case DOMContentLoaded already fired
+if (document.readyState !== 'loading') setTimeout(_startSessionListener, 100);
 </script>
 
 <!-- ═══ DASHBOARD LOGIC ═══ -->
@@ -1030,7 +1061,7 @@ function renderDist(parts) {
     {lbl:'0–19',min:0,max:20,color:'var(--red)',count:0},
     {lbl:'20–29',min:20,max:30,color:'var(--orange)',count:0},
     {lbl:'30–39',min:30,max:40,color:'#f8b61d',count:0},
-    {lbl:'40–49',min:40,max:50,color:var('--green-lt'),color:'#73b140',count:0},
+    {lbl:'40–49',min:40,max:50,color:'#73b140',count:0},
     {lbl:'50 🏆',min:50,max:51,color:'var(--green)',count:0},
   ];
   done.forEach(p=>{
@@ -1469,10 +1500,7 @@ window.renderAll = function(data) {
   renderAnalytics(allP);
 };
 
-// Also update view title when switching to analytics
-const _origShowView = showView;
-// Override handled inline — analytics auto-updates via renderAll on data change
-
+// ── TOAST ──
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
@@ -1483,15 +1511,6 @@ function showToast(msg) {
 document.querySelectorAll('.overlay').forEach(el=>{
   el.addEventListener('click', e=>{ if(e.target===el) el.classList.remove('open'); });
 });
-
-// Fallback empty state
-setTimeout(()=>{
-  if (!window._sessions) {
-    window._sessions = {};
-    window.renderSessions({});
-    window.populateSelector({});
-  }
-}, 3500);
 </script>
 </body>
 </html>
