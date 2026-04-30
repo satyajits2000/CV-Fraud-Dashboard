@@ -293,6 +293,60 @@ tr:last-child td { border-bottom: none; }
 .donut-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; }
 .donut-inner { position: absolute; text-align: center; }
 
+/* ══ ANALYTICS ══ */
+.an-insight{background:linear-gradient(135deg,var(--teal) 0%,var(--teal2) 100%);border-radius:10px;padding:18px 20px;color:#fff;margin-bottom:18px}
+.an-insight-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.an-insight-ico{width:34px;height:34px;background:rgba(255,255,255,.12);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1.15em;flex-shrink:0}
+.an-insight-title{font-family:var(--fh);font-size:.8em;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.65)}
+.an-insight-items{display:flex;flex-direction:column;gap:7px}
+.an-insight-item{display:flex;align-items:flex-start;gap:9px;background:rgba(255,255,255,.08);border-radius:7px;padding:9px 13px}
+.an-insight-item .ico{font-size:.95em;flex-shrink:0;margin-top:1px}
+.an-insight-item .txt{font-size:.82em;line-height:1.5;color:rgba(255,255,255,.88)}
+.an-insight-item .txt strong{color:#fff}
+.an-empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:.88em}
+.an-empty .emo{font-size:2.2em;margin-bottom:10px;display:block}
+/* Heatmap */
+.hm-table{width:100%;border-collapse:separate;border-spacing:3px}
+.hm-th{font-family:var(--fh);font-size:.68em;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;padding:5px 6px;text-align:center}
+.hm-scene-cell{padding:8px 4px;vertical-align:top;min-width:100px}
+.hm-scene-num{font-size:.65em;color:var(--muted);font-weight:600;margin-bottom:2px}
+.hm-scene-name{font-size:.78em;font-weight:700;color:var(--text);line-height:1.3}
+.hm-scene-topic{font-size:.64em;color:var(--muted);margin-top:2px}
+.hm-opt{border-radius:6px;padding:9px 6px;text-align:center;cursor:default;transition:transform .15s;min-width:70px}
+.hm-opt:hover{transform:scale(1.05);z-index:2;position:relative}
+.hm-opt-val{font-family:var(--fh);font-size:1.05em;font-weight:900;line-height:1}
+.hm-opt-pct{font-size:.65em;font-weight:600;margin-top:2px}
+.hm-opt-lbl{font-size:.62em;font-weight:700;margin-top:3px;text-transform:uppercase;letter-spacing:.05em}
+.hm-winner-cell{outline:2.5px solid rgba(0,0,0,.15);outline-offset:-2px}
+/* Comparison bars */
+.cmp-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.cmp-lbl{font-size:.76em;font-weight:700;width:100px;flex-shrink:0}
+.cmp-track{flex:1;height:14px;background:#edf1f3;border-radius:7px;overflow:hidden}
+.cmp-fill{height:100%;border-radius:7px;display:flex;align-items:center;padding-left:7px;font-size:.66em;font-weight:700;color:#fff;white-space:nowrap;transition:width 1s ease}
+.cmp-n{font-size:.78em;color:var(--muted);width:22px;text-align:right;flex-shrink:0;font-weight:700}
+/* Mistake cards */
+.mk-card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:16px 18px;margin-bottom:12px}
+.mk-card.poor{border-left:4px solid var(--red)}.mk-card.risky{border-left:4px solid var(--orange)}.mk-card.good{border-left:4px solid var(--green)}
+.mk-scene{font-family:var(--fh);font-size:.66em;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700;margin-bottom:3px}
+.mk-title{font-family:var(--fh);font-size:.93em;font-weight:800;color:var(--text);margin-bottom:6px}
+.mk-body{font-size:.82em;color:var(--muted);line-height:1.55;margin-bottom:9px}
+.mk-note{margin-top:9px;background:#f0f7f8;border-radius:6px;padding:8px 12px;font-size:.79em;color:var(--teal2);border-left:3px solid var(--teal-lt)}
+.mk-tags{display:flex;gap:6px;flex-wrap:wrap}
+.mk-tag{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:20px;font-size:.7em;font-weight:700}
+/* Score band */
+.score-band{display:flex;height:16px;border-radius:8px;overflow:hidden;margin:10px 0}
+.sb-seg{display:flex;align-items:center;justify-content:center;font-size:.64em;font-weight:700;color:#fff;min-width:0}
+/* Debrief questions */
+.dq-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dq-card{background:#f6f9fa;border-radius:7px;padding:11px 13px}
+.dq-label{font-size:.74em;font-weight:700;color:var(--teal);margin-bottom:4px}
+.dq-text{font-size:.8em;color:var(--muted);line-height:1.5;font-style:italic}
+/* Next steps */
+.ns-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:14px}
+.ns-card{background:rgba(255,255,255,.09);border-radius:8px;padding:12px}
+.ns-num{font-size:.7em;color:rgba(255,255,255,.5);font-weight:700;margin-bottom:4px}
+.ns-title{font-size:.86em;font-weight:700;margin-bottom:4px}
+.ns-body{font-size:.77em;color:rgba(255,255,255,.62);line-height:1.4}
 /* ══ VIEWS ══ */
 .view { display: none; }
 .view.active { display: block; }
@@ -340,6 +394,7 @@ tr:last-child td { border-bottom: none; }
     <div class="nav-section">
       <div class="nav-label">Views</div>
       <div class="nav-item active" onclick="showView('dashboard')"><span class="ico">📊</span>Dashboard</div>
+      <div class="nav-item" onclick="showView('analytics')"><span class="ico">🔬</span>Analytics</div>
       <div class="nav-item" onclick="showView('participants')"><span class="ico">👥</span>Participants</div>
       <div class="nav-item" onclick="showView('sessions')"><span class="ico">📅</span>Sessions</div>
       <div class="nav-label">Actions</div>
@@ -462,6 +517,122 @@ tr:last-child td { border-bottom: none; }
           </tbody></table>
         </div>
       </div>
+    </div>
+
+    <!-- ══ ANALYTICS VIEW ══ -->
+    <div id="view-analytics" class="view">
+      <div class="strip"></div>
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="topbar-title">🔬 Facilitator Analytics</div>
+          <div class="topbar-sub" id="an-session-sub">Select a session to see analytics</div>
+        </div>
+        <div class="topbar-right">
+          <button class="btn btn-ghost btn-sm" onclick="refreshData()">🔄 Refresh</button>
+          <button class="btn btn-green btn-sm" onclick="exportExcel()">📤 Export</button>
+        </div>
+      </div>
+
+      <!-- No data state -->
+      <div id="an-empty" class="card" style="margin-bottom:18px">
+        <div class="an-empty"><span class="emo">🔬</span>Select a session above to load live analytics for that group</div>
+      </div>
+
+      <!-- All analytics content — shown when data exists -->
+      <div id="an-content" style="display:none">
+
+        <!-- AI Insight Box -->
+        <div class="an-insight" id="an-insight-box">
+          <div class="an-insight-hdr">
+            <div class="an-insight-ico">🧠</div>
+            <div class="an-insight-title">AI Facilitator Insights — What this session's data tells you</div>
+          </div>
+          <div class="an-insight-items" id="an-insight-items"></div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="stats-row" style="margin-bottom:18px">
+          <div class="stat-card c-teal"><div class="stat-ico">👥</div><div class="stat-val" id="an-total">0</div><div class="stat-label">Participants</div></div>
+          <div class="stat-card c-green"><div class="stat-ico">✅</div><div class="stat-val" id="an-done">0</div><div class="stat-label">Completed</div></div>
+          <div class="stat-card c-orange"><div class="stat-ico">📊</div><div class="stat-val" id="an-avg">—</div><div class="stat-label">Avg Score /50</div></div>
+          <div class="stat-card c-red"><div class="stat-ico">⬇️</div><div class="stat-val" id="an-low">—</div><div class="stat-label">Lowest Score</div></div>
+          <div class="stat-card c-gold"><div class="stat-ico">🏆</div><div class="stat-val" id="an-top">—</div><div class="stat-label">Top Score</div></div>
+        </div>
+
+        <!-- Score band -->
+        <div class="card" style="margin-bottom:18px">
+          <div class="card-title">Score Band Distribution <span style="font-size:.85em;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">Where does the group sit?</span></div>
+          <div class="score-band" id="an-score-band"></div>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:.76em;color:var(--muted)" id="an-band-legend"></div>
+          <div id="an-band-alert" style="margin-top:12px;display:none;padding:10px 14px;border-radius:7px;font-size:.82em"></div>
+        </div>
+
+        <!-- Choice Heatmap -->
+        <div class="card" style="margin-bottom:18px">
+          <div class="card-title">Choice Heatmap <span style="font-size:.85em;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">How many people picked each option per scene · Darker = more chosen · Bold outline = dominant</span></div>
+          <div style="overflow-x:auto">
+            <table class="hm-table">
+              <thead><tr>
+                <th class="hm-th" style="text-align:left;min-width:120px">Scene</th>
+                <th class="hm-th" style="color:var(--green)">✅ Correct Option</th>
+                <th class="hm-th" style="color:var(--orange)">⚠️ Risky Option</th>
+                <th class="hm-th" style="color:var(--red)">❌ Poor Option</th>
+                <th class="hm-th">Group Verdict</th>
+              </tr></thead>
+              <tbody id="an-heatmap"></tbody>
+            </table>
+          </div>
+          <div id="an-heatmap-note" style="margin-top:10px;padding:9px 13px;background:var(--orange-bg);border-radius:7px;font-size:.79em;color:#5a3000;display:none">
+            ⚠️ <strong>Heatmap is estimated</strong> from Best/Risky/Poor totals because per-scene choice data was not saved for older entries. New completions (using the updated index.html) will show exact A/B/C choices.
+          </div>
+        </div>
+
+        <!-- Best vs Risky vs Poor per scene + Overall donut -->
+        <div class="two-col" style="margin-bottom:18px">
+          <div class="card">
+            <div class="card-title">Best vs Risky vs Poor — per Scene</div>
+            <div id="an-comparison"></div>
+          </div>
+          <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px">
+            <div class="card-title" style="width:100%">Overall Group Choice Profile</div>
+            <canvas id="an-donut" width="140" height="140"></canvas>
+            <div id="an-donut-legend" style="font-size:.8em;display:flex;gap:12px;flex-wrap:wrap;justify-content:center"></div>
+            <div id="an-donut-summary" style="font-size:.78em;color:var(--muted);line-height:1.5;max-width:220px;margin-top:4px"></div>
+          </div>
+        </div>
+
+        <!-- Common Mistake Patterns -->
+        <div style="margin-bottom:10px">
+          <div style="font-family:var(--fh);font-size:1em;font-weight:800;color:var(--text);margin-bottom:3px">⚠️ Common Mistake Patterns</div>
+          <div style="font-size:.82em;color:var(--muted)">Scenes where the group made the most wrong decisions — with coaching guidance</div>
+        </div>
+        <div id="an-mistakes" style="margin-bottom:18px"></div>
+
+        <!-- Facilitator Notes -->
+        <div class="two-col" style="margin-bottom:18px">
+          <div class="card">
+            <div class="card-title" style="color:var(--red)">🔴 Priority Topics for Debrief</div>
+            <div id="an-priorities" style="display:flex;flex-direction:column;gap:11px;font-size:.83em"></div>
+          </div>
+          <div class="card">
+            <div class="card-title" style="color:var(--green)">🟢 Strengths to Acknowledge</div>
+            <div id="an-strengths" style="display:flex;flex-direction:column;gap:11px;font-size:.83em"></div>
+          </div>
+        </div>
+
+        <!-- Discussion Questions -->
+        <div class="card" style="margin-bottom:18px">
+          <div class="card-title">🗣️ Suggested Discussion Questions</div>
+          <div class="dq-grid" id="an-questions"></div>
+        </div>
+
+        <!-- Next Steps -->
+        <div style="background:linear-gradient(135deg,var(--teal),var(--teal2));border-radius:10px;padding:20px;color:#fff;margin-bottom:28px">
+          <div style="font-family:var(--fh);font-size:.78em;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.5);margin-bottom:4px">Recommended Next Steps</div>
+          <div class="ns-grid" id="an-nextsteps"></div>
+        </div>
+
+      </div><!-- /an-content -->
     </div>
 
     <!-- ══ PARTICIPANTS VIEW ══ -->
@@ -859,7 +1030,7 @@ function renderDist(parts) {
     {lbl:'0–19',min:0,max:20,color:'var(--red)',count:0},
     {lbl:'20–29',min:20,max:30,color:'var(--orange)',count:0},
     {lbl:'30–39',min:30,max:40,color:'#f8b61d',count:0},
-    {lbl:'40–49',min:40,max:50,color:'#73b140',count:0},
+    {lbl:'40–49',min:40,max:50,color:var('--green-lt'),color:'#73b140',count:0},
     {lbl:'50 🏆',min:50,max:51,color:'var(--green)',count:0},
   ];
   done.forEach(p=>{
@@ -957,13 +1128,12 @@ async function createSession() {
     notes: document.getElementById('m-notes').value.trim(),
     status: 'active', createdAt: new Date().toISOString(), module: 'cv_fraud'
   };
-  if (typeof window.firebaseCreate !== 'function') { showToast('⚠ Firebase not ready, please wait…'); return; }
   try {
     await window.firebaseCreate(data);
     closeModal('modal-new');
     showToast('✅ Session created & activated!');
     ['m-name','m-loc','m-fac','m-notes'].forEach(id=>document.getElementById(id).value='');
-  } catch(e) { showToast('❌ Create failed: ' + e.message); console.error(e); }
+  } catch(e) { showToast('❌ Create failed'); console.error(e); }
 }
 
 function askDelete(id, name) {
@@ -1011,6 +1181,297 @@ function exportExcel() {
   a.click();
   showToast('📤 Exported!');
 }
+
+// ══════════════════════════════════════════════
+//  ANALYTICS ENGINE — fully dynamic per session
+// ══════════════════════════════════════════════
+
+const SCENE_META = [
+  { num:1, name:'A Stellar CV Arrives',   topic:'Initial Verification Gate',       correct:'B', risky:'C', poor:'A',
+    insight_poor:'Placed unverified person on live safety-critical project — timeline pressure used to bypass controls.',
+    insight_risky:'Started provisional work with parallel checks — verification must precede engagement on exposed roles.',
+    facilitator:'Ask: "Have you felt pressure to hire quickly? How did you handle verification under that pressure?"',
+    strength:'Most understood that placing an unverified person on a live safety-critical project is unacceptable.' },
+  { num:2, name:'Red Flags Emerge',        topic:'Escalation to Legal/E&C',         correct:'B', risky:'A', poor:'C',
+    insight_poor:'Gave the candidate time to explain — creating a window for evidence destruction.',
+    insight_risky:'Confronted the candidate directly — compromising the investigation before Legal could act.',
+    facilitator:'Ask: "Why do people\'s first instinct is to ask the candidate directly? What are the risks?"',
+    strength:'Those who escalated to E&C/Legal correctly protected evidence and followed the formal process.' },
+  { num:3, name:'He\'s Already Working',   topic:'Safety-First Response',           correct:'A', risky:'C', poor:'B',
+    insight_poor:'Sequenced HR termination before the design safety review — dangerous gap while construction continues.',
+    insight_risky:'Handled it quietly without telling the client — violates PMC duty of care and compounds liability.',
+    facilitator:'Ask: "What happens to the structures being built while HR completes its process?"',
+    strength:'Participants who chose correctly understood that safety and HR must run in parallel.' },
+  { num:4, name:'Telling the Client',      topic:'PMC Transparency Obligation',     correct:'A', risky:'C', poor:'B',
+    insight_poor:'Gave only a vague "personnel matter" summary — reads as deliberate evasion to the client.',
+    insight_risky:'Waited until the review was complete before communicating — silence creates suspicion and damages trust.',
+    facilitator:'Ask: "What would the client think if they found out later you withheld information?"',
+    strength:'Those who chose correctly issued a full transparent incident report — the standard SYSTRA PMC approach.' },
+  { num:5, name:'Building Safeguards',     topic:'Prevention Protocol',             correct:'A', risky:'C', poor:'B',
+    insight_poor:'Required only a CV declaration — a deterrent only; fraudsters will sign anything.',
+    insight_risky:'Used social media/LinkedIn checks — easily fabricated, cannot replace formal institutional verification.',
+    facilitator:'Ask: "What is the difference between a signed declaration and a formal third-party verification?"',
+    strength:'Most identified mandatory third-party verification as the correct protocol — the SYSTRA RED standard.' },
+];
+
+const DEBRIEF_QS = [
+  { label:'On verification pressure (S1)', q:'"Have you ever felt pressure to hire quickly on a project? How did you handle verification under that pressure?"' },
+  { label:'On escalation (S2)',             q:'"Why do you think people\'s first instinct is to ask the candidate directly rather than escalating to Legal?"' },
+  { label:'On client transparency (S4)',    q:'"What stops people from being fully transparent with clients after a fraud incident? How does that compare to SYSTRA\'s obligations as PMC?"' },
+  { label:'On prevention (S5)',             q:'"What is the difference between a candidate signing a CV declaration and a formal third-party verification?"' },
+];
+
+// Build heatmap data from participants
+// Each participant has sceneResults array: [{type:'correct'|'risky'|'poor', points, option?}]
+// If no sceneResults, we distribute nCorrect/nRisky/nPoor evenly as best estimate
+function buildHeatmapData(parts) {
+  const done = parts.filter(p => p.status === 'completed');
+  const hm = Array.from({length:5}, () => ({correct:0, risky:0, poor:0, hasExact:false}));
+  let hasAnyExact = false;
+
+  done.forEach(p => {
+    if (p.sceneResults && Array.isArray(p.sceneResults) && p.sceneResults.length > 0) {
+      hasAnyExact = true;
+      p.sceneResults.forEach((sr, i) => {
+        if (!sr || i >= 5) return;
+        hm[i].hasExact = true;
+        if (sr.type === 'correct') hm[i].correct++;
+        else if (sr.type === 'risky') hm[i].risky++;
+        else if (sr.type === 'poor') hm[i].poor++;
+      });
+    } else {
+      // Fallback: spread nCorrect/nRisky/nPoor across scenes (best estimate)
+      const nC = p.nCorrect || 0, nR = p.nRisky || 0, nP = p.nPoor || 0;
+      // Assign to scenes based on score pattern — distribute sequentially
+      let c = nC, r = nR, pp = nP;
+      for (let i = 0; i < 5; i++) {
+        if (c > 0) { hm[i].correct++; c--; }
+        else if (r > 0) { hm[i].risky++; r--; }
+        else if (pp > 0) { hm[i].poor++; pp--; }
+      }
+    }
+  });
+  return { hm, hasAnyExact, total: done.length };
+}
+
+function renderAnalytics(parts) {
+  const done = parts.filter(p => p.status === 'completed');
+  const n = done.length;
+
+  // Show/hide empty state
+  const isEmpty = n === 0;
+  document.getElementById('an-empty').style.display = isEmpty ? '' : 'none';
+  document.getElementById('an-content').style.display = isEmpty ? 'none' : '';
+  if (isEmpty) return;
+
+  // Session subtitle
+  const s = window._sessions?.[curSid];
+  document.getElementById('an-session-sub').textContent =
+    `${s?.name||''} · ${n} completed · ${s?.date||''} ${s?.location?'· '+s.location:''}`.replace(/^ · /,'');
+
+  // Stats
+  const scores = done.map(p => getScore(p));
+  const avg = Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+  const top = Math.max(...scores), low = Math.min(...scores);
+  document.getElementById('an-total').textContent = parts.length;
+  document.getElementById('an-done').textContent  = n;
+  document.getElementById('an-avg').textContent   = avg + '/50';
+  document.getElementById('an-low').textContent   = low + '/50';
+  document.getElementById('an-top').textContent   = top + '/50';
+
+  // Score band
+  const bands = [
+    {min:0,  max:30, label:'Poor (0–59%)',   color:'#d22328'},
+    {min:30, max:40, label:'Fair (60–79%)',   color:'#ef8029'},
+    {min:40, max:50, label:'Good (80–99%)',   color:'#73b140'},
+    {min:50, max:51, label:'Perfect (100%)',  color:'#2e7d32'},
+  ];
+  bands.forEach(b => b.count = done.filter(p => { const s=getScore(p); return s>=b.min&&s<b.max; }).length);
+  const bandEl = document.getElementById('an-score-band');
+  bandEl.innerHTML = bands.filter(b=>b.count>0).map(b =>
+    `<div class="sb-seg" style="width:${(b.count/n)*100}%;background:${b.color};flex:${b.count}">${b.count}</div>`
+  ).join('');
+  document.getElementById('an-band-legend').innerHTML = bands.filter(b=>b.count>0).map(b =>
+    `<span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${b.color};margin-right:4px"></span>${b.label} — ${b.count}</span>`
+  ).join('');
+  const alertEl = document.getElementById('an-band-alert');
+  const pctBelow60 = done.filter(p=>getPct(p)<60).length;
+  if (pctBelow60 / n >= 0.5) {
+    alertEl.style.display = '';
+    alertEl.style.cssText += ';background:var(--red-lt);border-radius:7px;padding:10px 14px;font-size:.82em;color:var(--red-dk)';
+    alertEl.innerHTML = `⚠️ <strong>${Math.round(pctBelow60/n*100)}% of completers scored below 60%.</strong> Consider a group debrief before closing the session.`;
+  } else { alertEl.style.display = 'none'; }
+
+  // Heatmap
+  const { hm, hasAnyExact, total: hmTotal } = buildHeatmapData(parts);
+  const hmTbody = document.getElementById('an-heatmap');
+  hmTbody.innerHTML = SCENE_META.map((sc, i) => {
+    const {correct:c, risky:r, poor:p} = hm[i];
+    const maxV = Math.max(c, r, p, 0.01);
+    function cell(count, color, label) {
+      if (hmTotal === 0) return `<td style="padding:3px"><div class="hm-opt" style="background:#f0f4f6;min-width:70px"><div class="hm-opt-val" style="color:#ccc">—</div></div></td>`;
+      const pct = Math.round((count/hmTotal)*100);
+      const intensity = count/hmTotal;
+      const alpha = 0.1 + intensity * 0.8;
+      const isWinner = count === maxV && count > 0;
+      const textColor = intensity > 0.45 ? 'rgba(255,255,255,.95)' : color;
+      return `<td style="padding:3px"><div class="hm-opt ${isWinner?'hm-winner-cell':''}" style="background:${color};opacity:${Math.max(0.1,alpha)}" title="${count} of ${hmTotal} (${pct}%)">
+        <div class="hm-opt-val" style="color:${textColor};opacity:1">${count}</div>
+        <div class="hm-opt-pct" style="color:${intensity>0.45?'rgba(255,255,255,.75)':'rgba(0,0,0,.45)'}">${pct}%</div>
+        <div class="hm-opt-lbl" style="color:${intensity>0.45?'rgba(255,255,255,.65)':'rgba(0,0,0,.35)'}">${label}</div>
+      </div></td>`;
+    }
+    const winner = c>=r&&c>=p?'✅ Best wins':r>=c&&r>=p?'⚠️ Risky wins':'❌ Poor wins';
+    const wCls   = c>=r&&c>=p?'b-green':r>=c&&r>=p?'b-amber':'b-red';
+    return `<tr>
+      <td class="hm-scene-cell">
+        <div class="hm-scene-num">Scene ${sc.num}</div>
+        <div class="hm-scene-name">${sc.name}</div>
+        <div class="hm-scene-topic">${sc.topic}</div>
+      </td>
+      ${cell(c,'#2e7d32','BEST')}
+      ${cell(r,'#ef8029','RISKY')}
+      ${cell(p,'#d22328','POOR')}
+      <td style="padding:3px 6px"><span class="badge ${wCls}" style="white-space:nowrap;font-size:.7em">${winner}</span></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('an-heatmap-note').style.display = hasAnyExact ? 'none' : '';
+
+  // Comparison bars
+  const compEl = document.getElementById('an-comparison');
+  compEl.innerHTML = SCENE_META.map((sc, i) => {
+    const {correct:c, risky:r, poor:p} = hm[i];
+    const mx = Math.max(c,r,p,1);
+    return `<div style="margin-bottom:13px">
+      <div style="font-size:.74em;font-weight:700;color:var(--text);margin-bottom:5px">Scene ${sc.num}: ${sc.name}</div>
+      <div class="cmp-row"><span class="cmp-lbl" style="color:var(--green)">✅ Best</span><div class="cmp-track"><div class="cmp-fill" style="width:${(c/mx)*100}%;background:var(--green)">${c>0?c+' person'+(c>1?'s':''):''}</div></div><span class="cmp-n">${c}</span></div>
+      <div class="cmp-row"><span class="cmp-lbl" style="color:var(--orange)">⚠️ Risky</span><div class="cmp-track"><div class="cmp-fill" style="width:${(r/mx)*100}%;background:var(--orange)">${r>0?r+' person'+(r>1?'s':''):''}</div></div><span class="cmp-n">${r}</span></div>
+      <div class="cmp-row"><span class="cmp-lbl" style="color:var(--red)">❌ Poor</span><div class="cmp-track"><div class="cmp-fill" style="width:${(p/mx)*100}%;background:var(--red)">${p>0?p+' person'+(p>1?'s':''):''}</div></div><span class="cmp-n">${p}</span></div>
+    </div>`;
+  }).join('');
+
+  // Donut canvas
+  const totalC = done.reduce((a,p)=>a+(p.nCorrect||0),0);
+  const totalR = done.reduce((a,p)=>a+(p.nRisky||0),0);
+  const totalP = done.reduce((a,p)=>a+(p.nPoor||0),0);
+  const totalAll = totalC + totalR + totalP || 1;
+  const cv = document.getElementById('an-donut');
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0,0,140,140);
+  const cx=70, cy=70, rad=52, stroke=18;
+  const segments = [{v:totalC,color:'#2e7d32'},{v:totalR,color:'#ef8029'},{v:totalP,color:'#d22328'}];
+  let start = -Math.PI/2;
+  ctx.lineWidth = stroke; ctx.lineCap = 'round';
+  // Background
+  ctx.beginPath(); ctx.arc(cx,cy,rad,0,Math.PI*2); ctx.strokeStyle='#e8edf0'; ctx.stroke();
+  segments.forEach(seg => {
+    if (seg.v === 0) return;
+    const angle = (seg.v / totalAll) * Math.PI * 2;
+    ctx.beginPath(); ctx.arc(cx,cy,rad,start,start+angle);
+    ctx.strokeStyle = seg.color; ctx.stroke();
+    start += angle;
+  });
+  const pctC=Math.round(totalC/totalAll*100), pctR=Math.round(totalR/totalAll*100), pctP=Math.round(totalP/totalAll*100);
+  document.getElementById('an-donut-legend').innerHTML =
+    `<span style="color:var(--green);font-weight:700">✅ Best ${pctC}% (${totalC})</span>
+     <span style="color:var(--orange);font-weight:700">⚠ Risky ${pctR}% (${totalR})</span>
+     <span style="color:var(--red);font-weight:700">❌ Poor ${pctP}% (${totalP})</span>`;
+  const dominantType = totalC>=totalR&&totalC>=totalP?'Best choices dominate ✅':
+    totalR>=totalC&&totalR>=totalP?'Group leans Risky ⚠️ — partial knowledge, low confidence':'Group chose Poor options most — knowledge gap identified ❌';
+  document.getElementById('an-donut-summary').textContent = dominantType;
+
+  // Build mistake patterns — find worst 3 scenes
+  const scenePoorPct = SCENE_META.map((sc,i) => {
+    const {correct:c, risky:r, poor:p} = hm[i];
+    return { sc, i, wrongPct: (r+p) / Math.max(hmTotal,1), correct:c, risky:r, poor:p };
+  }).sort((a,b) => b.wrongPct - a.wrongPct);
+
+  const mkEl = document.getElementById('an-mistakes');
+  mkEl.innerHTML = scenePoorPct.slice(0,3).filter(x=>x.wrongPct>0).map(({sc,correct:c,risky:r,poor:p}) => {
+    const dominant = p >= r ? 'poor' : 'risky';
+    const dominantBody = p >= r ? sc.insight_poor : sc.insight_risky;
+    const wrongN = r + p;
+    return `<div class="mk-card ${dominant}">
+      <div class="mk-scene">Scene ${sc.num} — ${sc.name}</div>
+      <div class="mk-title">${wrongN} of ${hmTotal} participant${wrongN!==1?'s':''} chose incorrectly on this scene</div>
+      <div class="mk-body">${dominantBody}</div>
+      <div class="mk-tags">
+        ${p>0?`<span class="mk-tag" style="background:var(--red-lt);color:var(--red)">❌ ${p} Poor choice${p>1?'s':''}</span>`:''}
+        ${r>0?`<span class="mk-tag" style="background:var(--orange-bg);color:var(--orange)">⚠️ ${r} Risky choice${r>1?'s':''}</span>`:''}
+        ${c>0?`<span class="mk-tag" style="background:var(--green-bg);color:var(--green)">✅ ${c} Best choice${c>1?'s':''}</span>`:''}
+        <span class="mk-tag" style="background:var(--teal-pale);color:var(--teal2)">${sc.topic}</span>
+      </div>
+      <div class="mk-note">💬 <strong>Facilitator tip:</strong> ${sc.facilitator}</div>
+    </div>`;
+  }).join('') || '<div class="card" style="padding:20px;text-align:center;color:var(--green)">🏆 Excellent! No significant mistake patterns detected for this session.</div>';
+
+  // Priorities (worst 3 scenes) & Strengths (best 2 scenes)
+  const worstScenes = scenePoorPct.slice(0,3);
+  const bestScenes  = [...scenePoorPct].sort((a,b)=>b.correct-a.correct).slice(0,2);
+  document.getElementById('an-priorities').innerHTML = worstScenes.filter(x=>x.wrongPct>0).map(({sc,risky:r,poor:p}) => `
+    <div style="border-left:3px solid ${p>=r?'var(--red)':'var(--orange)'};padding-left:12px">
+      <div style="font-weight:700;margin-bottom:3px">${sc.topic} (Scene ${sc.num})</div>
+      <div style="color:var(--muted);line-height:1.5">${p>=r?sc.insight_poor:sc.insight_risky}</div>
+    </div>`).join('') || '<div style="color:var(--muted);font-size:.85em;padding:8px">No major gaps identified — great session!</div>';
+
+  document.getElementById('an-strengths').innerHTML = bestScenes.filter(x=>x.correct>0).map(({sc}) => `
+    <div style="border-left:3px solid var(--green);padding-left:12px">
+      <div style="font-weight:700;margin-bottom:3px">${sc.topic} (Scene ${sc.num})</div>
+      <div style="color:var(--muted);line-height:1.5">${sc.strength}</div>
+    </div>`).join('') || '<div style="color:var(--muted);font-size:.85em;padding:8px">No completions yet.</div>';
+
+  // AI Insight bullets
+  const topSc = done.reduce((best,p)=>getScore(p)>getScore(best)?p:best, done[0]);
+  const spread = top - low;
+  const insights = [];
+  if (spread >= 20) insights.push({ ico:'🎯', txt:`<strong>Wide skill gap detected (${spread} pts spread):</strong> Scores range from ${low} to ${top}/50. Participants are at very different fraud awareness levels — do not assume a uniform baseline.` });
+  const worstSc = scenePoorPct[0];
+  if (worstSc && worstSc.wrongPct > 0.5) insights.push({ ico:'⚠️', txt:`<strong>Scene ${worstSc.sc.num} (${worstSc.sc.name}) was the hardest:</strong> ${Math.round(worstSc.wrongPct*100)}% of completers chose incorrectly. This is the #1 topic to reinforce in debrief — "${worstSc.sc.topic}".` });
+  if (pctC > 0 && totalR > totalP) insights.push({ ico:'🔁', txt:`<strong>Risky choices outnumber Poor choices (${totalR} vs ${totalP}):</strong> The group tends toward partially correct options rather than clearly wrong ones — suggesting risk awareness exists but confidence under pressure is low. Coaching opportunity, not a knowledge gap.` });
+  const bestSc = scenePoorPct[scenePoorPct.length-1];
+  if (bestSc && bestSc.correct === hmTotal) insights.push({ ico:'✅', txt:`<strong>Scene ${bestSc.sc.num} (${bestSc.sc.name}) was perfectly answered by all:</strong> Everyone chose the Best option here. Reinforce this knowledge and build from it.` });
+  if (topSc) insights.push({ ico:'🏆', txt:`<strong>Top performer: ${topSc.name||'—'} (${getScore(topSc)}/50 — ${getPct(topSc)}%).</strong> Consider inviting them to share their reasoning during the debrief.` });
+  const passRate = done.filter(p=>getPct(p)>=80).length;
+  insights.push({ ico:'📊', txt:`<strong>Pass rate (≥80%): ${passRate} of ${n} completers (${Math.round(passRate/n*100)}%).</strong> ${passRate/n < 0.5 ? 'Majority did not reach the 80% threshold — consider a refresher or broader L&D rollout.' : 'Good performance overall — a brief debrief on weaker scenes should suffice.'}` });
+
+  document.getElementById('an-insight-items').innerHTML = insights.map(i => `
+    <div class="an-insight-item">
+      <span class="ico">${i.ico}</span>
+      <div class="txt">${i.txt}</div>
+    </div>`).join('');
+
+  // Discussion questions
+  document.getElementById('an-questions').innerHTML = DEBRIEF_QS.map(q => `
+    <div class="dq-card">
+      <div class="dq-label">${q.label}</div>
+      <div class="dq-text">${q.q}</div>
+    </div>`).join('');
+
+  // Next steps
+  const nextSteps = [
+    { num:'1', title:`Run Scene ${worstSc?.sc.num||4} debrief now`, body:'Most critical gap. Play the scenario again as a group and discuss each option.' },
+    { num:'2', title:'Share RED procedure', body:'Distribute the SYSTRA RED procedure excerpt on exposed-position verification before participants leave.' },
+    { num:'3', title:'Re-run in 3 months', body:'Create a new session, allow participants to replay. Track score improvement as a KPI.' },
+    { num:'4', title: passRate/n < 0.5 ? 'Flag for L&D rollout' : 'Certificate of completion', body: passRate/n < 0.5 ? 'Majority below 60% threshold — signal for broader awareness campaign.' : 'Issue completion certificates to participants who scored ≥80%.' },
+  ];
+  document.getElementById('an-nextsteps').innerHTML = nextSteps.map(s => `
+    <div class="ns-card">
+      <div class="ns-num">Step ${s.num}</div>
+      <div class="ns-title">${s.title}</div>
+      <div class="ns-body">${s.body}</div>
+    </div>`).join('');
+}
+
+// Hook analytics into renderAll
+const _origRenderAll = window.renderAll;
+window.renderAll = function(data) {
+  _origRenderAll(data);
+  renderAnalytics(allP);
+};
+
+// Also update view title when switching to analytics
+const _origShowView = showView;
+// Override handled inline — analytics auto-updates via renderAll on data change
 
 function showToast(msg) {
   const t = document.getElementById('toast');
